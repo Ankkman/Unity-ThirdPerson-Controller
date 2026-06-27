@@ -26,9 +26,16 @@ public class WeaponComponent : MonoBehaviour
     {
         animatorBridge = GetComponent<CharacterAnimatorBridge>();
         
-        // Initialize your pure C# data model
+        if (gunData != null && gunData.ShootConfig != null)
+        {
+            // These now read seamlessly from your scriptable configuration file!
+            magazineSize = gunData.ShootConfig.MagazineSize; 
+            fireRate = gunData.ShootConfig.FireRate;
+        }
+
         Model = new WeaponModel(magazineSize, fireRate, reloadTime);
     }
+
 
     private void Start()
     {

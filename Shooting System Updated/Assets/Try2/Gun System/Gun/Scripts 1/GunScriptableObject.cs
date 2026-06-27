@@ -6,12 +6,17 @@ using UnityEngine.Pool;
 public class GunScriptableObject : ScriptableObject
 {
     [Header("Combat Stats")]
-    public int Damage = 25; // WE ADDED THE DAMAGE VARIABLE HERE!
+    public int Damage = 25; 
 
     public ImpactType ImpactType;
     public GunType Type;
     public string Name;
 
+    [Header("Weapon Audio")]
+    [Tooltip("The audio clip played from the gun muzzle point whenever it fires.")]
+    public AudioClip fireSFX; // New: Unique gun sound slot
+
+    [Header("Configurations")]
     public ShootConfigurationScriptableObject ShootConfig;
     public TrailConfigScriptableObject TrailConfig;
 
@@ -42,8 +47,13 @@ public class GunScriptableObject : ScriptableObject
 
             if (MuzzleFlash != null) MuzzleFlash.Play();
 
-            Vector3 rawDirection = (targetPoint - MuzzleTransform.position).normalized;
+            // NEW: Instantly play the gunshot audio from the muzzle position
+            if (fireSFX != null && MuzzleTransform != null)
+            {
+                AudioSource.PlayClipAtPoint(fireSFX, MuzzleTransform.position, 1f);
+            }
 
+            Vector3 rawDirection = (targetPoint - MuzzleTransform.position).normalized;
             Vector3 shootDirection = rawDirection + new Vector3(
                 Random.Range(-ShootConfig.Spread.x, ShootConfig.Spread.x),
                 Random.Range(-ShootConfig.Spread.y, ShootConfig.Spread.y),
@@ -67,62 +77,74 @@ public class GunScriptableObject : ScriptableObject
     private IEnumerator PlayTrail(Vector3 StartPoint, Vector3 EndPoint, RaycastHit Hit)
     {
         TrailRenderer instance = TrailPool.Get();
-                instance.gameObject.SetActive(true);
-                
-                // 1. Teleport to the muzzle
-                instance.transform.position = StartPoint;
-                
-                // 2. CRITICAL FIX: Erase the geometry from the previous bullet!
-                instance.Clear(); 
+        instance.gameObject.SetActive(true);
+        instance.transform.position = StartPoint;
+        instance.Clear(); 
 
-                yield return null; 
+        yield return null; 
 
-                instance.emitting = true;
+        instance.emitting = true;
+        float distance = Vector3.Distance(StartPoint, EndPoint);
+        float remainingDistance = distance;
+        
+        while (remainingDistance > 0)
+        {
+            instance.transform.position = Vector3.Lerp(
+                StartPoint,
+                EndPoint,
+                Mathf.Clamp01(1 - (remainingDistance / distance))
+            );
+            remainingDistance -= TrailConfig.SimulationSpeed * Time.deltaTime;
+            yield return null;
+        }
 
-                float distance = Vector3.Distance(StartPoint, EndPoint);
-                float remainingDistance = distance;
-                
-                while (remainingDistance > 0)
+        instance.transform.position = EndPoint;
+
+        // --- PROCESSED HIT RESULTS ---
+        if (Hit.collider != null)
+        {
+            GameObject hitTarget = Hit.transform.gameObject;
+            float impactSizeMultiplier = 1.0f; 
+            BodyPart detectedPart = BodyPart.Body; // New: Tracks part identity for audio loops
+
+            // 1. Deliver Damage and Detect specialized Body Parts
+            HitboxRegion hitRegion = Hit.collider.GetComponent<HitboxRegion>();
+            if (hitRegion != null)
+            {
+                hitRegion.ReceiveHit(Damage);
+
+                Transform rootTransform = hitRegion.transform.root; 
+                hitTarget = rootTransform.gameObject;
+                detectedPart = hitRegion.partType; // Pass structural enum data
+
+                if (hitRegion.partType == BodyPart.Head)
                 {
-                    instance.transform.position = Vector3.Lerp(
-                        StartPoint,
-                        EndPoint,
-                        Mathf.Clamp01(1 - (remainingDistance / distance))
-                    );
-                    remainingDistance -= TrailConfig.SimulationSpeed * Time.deltaTime;
-                    yield return null;
+                    impactSizeMultiplier = 2.0f; 
                 }
-
-                instance.transform.position = EndPoint;
-
-                // --- THE CRITICAL FIXES ARE HERE ---
-                if (Hit.collider != null)
+                else if (hitRegion.partType == BodyPart.Body)
                 {
-                    // 1. Send the damage to the Hitbox!
-                    HitboxRegion hitRegion = Hit.collider.GetComponent<HitboxRegion>();
-                    if (hitRegion != null)
-                    {
-                        hitRegion.ReceiveHit(Damage);
-                    }
-
-                    // 2. Safe check for the SurfaceManager to prevent the crash!
-                    if (SurfaceManager.Instance != null)
-                    {
-                        SurfaceManager.Instance.HandleImpact(
-                            Hit.transform.gameObject,
-                            EndPoint,
-                            Hit.normal,
-                            ImpactType,
-                            0
-                        );
-                    }
+                    impactSizeMultiplier = 0.5f; 
                 }
+            }
 
-                yield return new WaitForSeconds(TrailConfig.Duration);
-                
-                instance.emitting = false;
-                instance.gameObject.SetActive(false);
-                TrailPool.Release(instance);
+            // 2. Call SurfaceManager passing our structural size and bone part identity
+            if (SurfaceManager.Instance != null)
+            {
+                SurfaceManager.Instance.HandleImpact(
+                    hitTarget,
+                    Hit.point, 
+                    Hit.normal,
+                    impactSizeMultiplier,
+                    detectedPart // Injected parameter triggers unique sound overrides
+                );
+            }
+        }
+
+        yield return new WaitForSeconds(TrailConfig.Duration);
+        
+        instance.emitting = false;
+        instance.gameObject.SetActive(false);
+        TrailPool.Release(instance);
     }
 
     private TrailRenderer CreateTrail()
@@ -134,10 +156,8 @@ public class GunScriptableObject : ScriptableObject
         trail.widthCurve = TrailConfig.WidthCurve;
         trail.time = TrailConfig.Duration;
         trail.minVertexDistance = TrailConfig.MinVertexDistance;
-
         trail.emitting = false;
         trail.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-
         return trail;
     }
 }
