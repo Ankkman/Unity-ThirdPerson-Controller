@@ -36,6 +36,17 @@ public class WeaponComponent : MonoBehaviour
         Model = new WeaponModel(magazineSize, fireRate, reloadTime);
     }
 
+    private void Update()
+    {
+        // Press R to trigger a reload test manually
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Debug.Log("<color=yellow>R Key Pressed! Running TryReload()...</color>");
+            TryReload();
+        }
+    }
+
+
 
     private void Start()
     {

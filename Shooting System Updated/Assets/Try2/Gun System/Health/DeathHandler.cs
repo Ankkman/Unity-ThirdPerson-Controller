@@ -14,6 +14,8 @@ public class DeathHandler : MonoBehaviour
     private CharacterController charController;
     private WeaponComponent weapon;
 
+    public bool killedByHeadshot { get; set; }
+
     private void Awake()
     {
         health = GetComponent<HealthComponent>();
@@ -27,22 +29,21 @@ public class DeathHandler : MonoBehaviour
 
     private void OnDeath()
     {
-        // 1. Play the Mixamo death fall
-        animatorBridge.PlayDeath();
+        // Determine ID: 1 for Headshot, 0 for standard Body hit
+        int typeID = killedByHeadshot ? 1 : 0;
 
-        // 2. Instantly kill the procedural IK so the spine goes limp
-        if (masterRig != null)
-        {
-            masterRig.weight = 0f;
-        }
+        // 1. Play the correct Mixamo death clip variation
+        animatorBridge.PlayDeath(typeID);
 
-        // 3. Shut down all combat and movement capabilities
+        // 2. Instantly kill the procedural IK so the spine matches the fall
+        if (masterRig != null) masterRig.weight = 0f;
+
+        // 3. Shut down weapon and controllers
         if (weapon != null) weapon.enabled = false;
         if (charController != null) charController.enabled = false;
 
         StartCoroutine(DisableHitboxesAfterAnimation());
     }
-
     private IEnumerator DisableHitboxesAfterAnimation()
     {
         yield return new WaitForSeconds(3f); 

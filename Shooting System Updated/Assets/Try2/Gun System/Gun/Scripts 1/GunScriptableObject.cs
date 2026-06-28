@@ -120,6 +120,11 @@ public class GunScriptableObject : ScriptableObject
                 if (hitRegion.partType == BodyPart.Head)
                 {
                     impactSizeMultiplier = 2.0f; 
+                    DeathHandler targetDeath = hitTarget.GetComponent<DeathHandler>();
+                    if (targetDeath != null)
+                    {
+                        targetDeath.killedByHeadshot = true;
+                    }
                 }
                 else if (hitRegion.partType == BodyPart.Body)
                 {
