@@ -1,0 +1,28 @@
+{
+  "buildFiles": [
+    "D:\\Unity Project\\Unity-ThirdPerson-Controller\\Shooting System Updated\\Library\\Bee\\Android\\Prj\\IL2CPP\\Gradle\\unityLibrary\\src\\main\\cpp\\CMakeLists.txt",
+    "D:\\Unity Project\\Unity-ThirdPerson-Controller\\Shooting System Updated\\Library\\Bee\\Android\\Prj\\IL2CPP\\Gradle\\unityLibrary\\src\\main\\cpp\\FramePacing\\CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "C:\\Program Files\\Unity 2022.3.20f1\\6000.3.8f1\\Editor\\Data\\PlaybackEngines\\AndroidPlayer\\SDK\\cmake\\3.22.1\\bin\\ninja.exe",
+      "-C",
+      "D:\\Unity Project\\Unity-ThirdPerson-Controller\\Shooting System Updated\\.utmp\\RelWithDebInfo\\4x2h6441\\armeabi-v7a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "C:\\Program Files\\Unity 2022.3.20f1\\6000.3.8f1\\Editor\\Data\\PlaybackEngines\\AndroidPlayer\\SDK\\cmake\\3.22.1\\bin\\ninja.exe",
+    "-C",
+    "D:\\Unity Project\\Unity-ThirdPerson-Controller\\Shooting System Updated\\.utmp\\RelWithDebInfo\\4x2h6441\\armeabi-v7a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {
+    "swappywrapper::@7e25bd1f32ce224db4e9": {
+      "artifactName": "swappywrapper",
+      "abi": "armeabi-v7a",
+      "output": "D:\\Unity Project\\Unity-ThirdPerson-Controller\\Shooting System Updated\\Library\\Bee\\Android\\Prj\\IL2CPP\\Gradle\\unityLibrary\\build\\intermediates\\cxx\\RelWithDebInfo\\4x2h6441\\obj\\armeabi-v7a\\libswappywrapper.so",
+      "runtimeFiles": []
+    }
+  }
+}

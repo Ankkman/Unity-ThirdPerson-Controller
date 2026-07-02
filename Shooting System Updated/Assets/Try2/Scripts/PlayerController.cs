@@ -56,7 +56,15 @@ public class PlayerController : MonoBehaviour
     public WeaponComponent equippedWeapon;
     public GameObject weaponMesh; // ADD THIS! We will use this to hide the gun.
     private bool isFiring;
+    
 
+
+    [Header("Mobile UI Configuration")]
+    [SerializeField] private bool useMobileControls = true;
+    
+    // Internal backing vectors to hold data from the UI Joystick
+    private Vector2 mobileMoveInput;
+    public TouchField cameraTouchField; // <-- ADD THIS
     
 
 
@@ -95,31 +103,13 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        // 1. INPUT BINDING TO TEST HOLSTERING / DRAWING
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            hasWeapon = !hasWeapon;
-            Debug.Log($"<color=cyan>Weapon Toggled. Equipped = {hasWeapon}</color>");
-        }
-
-        // 2. INPUT BINDING TO TEST HEALING PAUSE SYSTEM
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            if (animatorBridge != null)
-            {
-                Debug.Log("<color=green>H Key Pressed! Triggering PlayHeal...</color>");
-                animatorBridge.PlayHeal();
-            }
-        }
-
-        // Keep your original processing updates intact below
-        HandleRaycastTarget();
+        HandleInputGathering();
         HandleMovement();
-        HandleAnimations();
-        HandleCameraToggle();
+        HandleRaycastTarget(); // THIS MOVES THE SPHERE!
+        HandleCameraToggle();  // THIS TRIGGERS THE ZOOM!
         HandleShooting();
+        HandleAnimations();
     }
-
 
     private void LateUpdate()
     {
@@ -338,6 +328,89 @@ public class PlayerController : MonoBehaviour
             // Always tell the weapon to stop firing if we let go of the button OR drop our arms
             equippedWeapon.StopFiring();
         }
+    }
+
+
+
+
+    private void HandleInputGathering()
+    {
+        if (useMobileControls)
+        {
+            // 1. Mobile Movement
+            float h = Input.GetAxisRaw("Horizontal") + mobileMoveInput.x;
+            float v = Input.GetAxisRaw("Vertical") + mobileMoveInput.y;
+            moveInput = new Vector2(h, v);
+
+            if (Input.GetKeyDown(KeyCode.LeftShift)) isSprinting = true;
+            if (Input.GetKeyUp(KeyCode.LeftShift)) isSprinting = false;
+
+            // 2. Mobile Camera Look (NEW!)
+            if (cameraTouchField != null && cameraTouchField.Pressed)
+            {
+                // Multiply by a mobile sensitivity multiplier (e.g., 0.1f) to keep swiping smooth
+                lookInput = cameraTouchField.TouchDist * 0.1f; 
+            }
+            else
+            {
+                lookInput = Vector2.zero;
+            }
+        }
+        else
+        {
+            // Traditional standalone PC layout fallback
+            moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            lookInput = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")); // Make sure PC look works!
+            isSprinting = Input.GetKey(KeyCode.LeftShift);
+            if (Input.GetKeyDown(KeyCode.H) && animatorBridge != null) animatorBridge.PlayHeal();
+        }
+    }
+
+    // --- PUBLIC MOBILE UI GATEWAYS ---
+    // These functions will be directly triggered by your Canvas UI components
+
+    public void MobileUpdateMovement(Vector2 inputDirection)
+    {
+        mobileMoveInput = inputDirection;
+    }
+
+    public void MobileSetSprint(bool sprintState)
+    {
+        isSprinting = sprintState;
+    }
+
+    public void MobileTriggerHeal()
+    {
+        // Fires the exact same framework we locked down earlier
+        if (animatorBridge != null)
+        {
+            animatorBridge.PlayHeal();
+        }
+    }
+
+    public void MobileTriggerReload()
+    {
+        if (animatorBridge != null && hasWeapon && !animatorBridge.IsReloading && !animatorBridge.IsHealing)
+        {
+            // Ensure you call your specific reload logic or bridge method here
+            animator.SetTrigger("Reload"); 
+        }
+    }
+
+    public void MobileToggleWeapon()
+    {
+        // Seamlessly swaps between Armed and Unarmed locomotion pathways
+        hasWeapon = !hasWeapon;
+    }
+
+    public void MobileSetAim(bool state)
+    {
+        isAiming = state;
+    }
+
+    public void MobileSetFire(bool state)
+    {
+        isFiring = state;
     }
 
 }
