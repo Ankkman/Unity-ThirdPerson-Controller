@@ -95,17 +95,31 @@ public class CharacterMotor : MonoBehaviour
     // ==========================================
     // INTERNAL PHYSICAL EXECUTION
     // ==========================================
-
     private void HandleMovement()
     {
         // Checks the bridge booleans AND asks the Animator if the Reload state is currently playing
         bool isPerformingAction = (animatorBridge != null && (animatorBridge.IsReloading || animatorBridge.IsHealing)) || 
-                                  animator.GetCurrentAnimatorStateInfo(1).IsName("Reload") || 
-                                  animator.GetNextAnimatorStateInfo(1).IsName("Reload");
+                                animator.GetCurrentAnimatorStateInfo(1).IsName("Reload") || 
+                                animator.GetNextAnimatorStateInfo(1).IsName("Reload");
 
-        bool wantsToCombatStrafe = (wantsToAim || wantsToFire) && hasWeapon && !isPerformingAction;
+        // --- PUBG TACTICAL LOCOMOTION LOGIC ---
+        bool wantsToCombatStrafe = false;
 
-        if (wantsToCombatStrafe) wantsToSprint = false;
+        if (!isPerformingAction && hasWeapon)
+        {
+            if (wantsToAim || wantsToFire)
+            {
+                // Hard lock when aiming/shooting
+                wantsToCombatStrafe = true;
+                wantsToSprint = false; // Force sprint off
+            }
+            else if (!wantsToSprint)
+            {
+                // Tactical walking: Always face forward to backpedal and side-step!
+                wantsToCombatStrafe = true;
+            }
+        }
+        // --------------------------------------
 
         if (!wantsToCombatStrafe && !isPerformingAction)
         {
@@ -147,10 +161,27 @@ public class CharacterMotor : MonoBehaviour
     {
         // Checks the bridge booleans AND asks the Animator if the Reload state is currently playing
         bool isPerformingAction = (animatorBridge != null && (animatorBridge.IsReloading || animatorBridge.IsHealing)) || 
-                                  animator.GetCurrentAnimatorStateInfo(1).IsName("Reload") || 
-                                  animator.GetNextAnimatorStateInfo(1).IsName("Reload");
+                                animator.GetCurrentAnimatorStateInfo(1).IsName("Reload") || 
+                                animator.GetNextAnimatorStateInfo(1).IsName("Reload");
 
-        bool wantsToCombatStrafe = (wantsToAim || wantsToFire) && hasWeapon && !isPerformingAction;
+        // --- PUBG TACTICAL LOCOMOTION LOGIC ---
+        bool wantsToCombatStrafe = false;
+
+        if (!isPerformingAction && hasWeapon)
+        {
+            if (wantsToAim || wantsToFire)
+            {
+                // Hard lock when aiming/shooting
+                wantsToCombatStrafe = true;
+                wantsToSprint = false; // Force sprint off
+            }
+            else if (!wantsToSprint)
+            {
+                // Tactical walking: Always face forward to backpedal and side-step!
+                wantsToCombatStrafe = true;
+            }
+        }
+        // --------------------------------------
 
         // Convert world movement into local animation space for the Blend Tree
         Vector3 localMove = transform.InverseTransformDirection(currentMoveDirection);
@@ -197,6 +228,7 @@ public class CharacterMotor : MonoBehaviour
             }
         }
     }
+
 
     private void HandleShooting()
         {

@@ -12,8 +12,8 @@ public class MobileInputBridge : MonoBehaviour
         // Stream the input data to your controller
         targetPlayer.MobileUpdateMovement(directionalInput);
         
-        // Sprint handling based on joystick push distance
-        if (directionalInput.magnitude > 0.85f)
+        // PUBG FIX: Only trigger sprint if the user pushes the joystick FORWARD (UP)!
+        if (directionalInput.y > 0.85f)
         {
             targetPlayer.MobileSetSprint(true);
         }

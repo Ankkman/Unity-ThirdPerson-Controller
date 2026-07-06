@@ -18,3 +18,6 @@ MemoryCaptures/
 *.tmp
 *.user
 *.userprefs
+# Android build artifacts anywhere in the project
+**/.utmp/
+

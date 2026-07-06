@@ -153,7 +153,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1.1, y: 0}
+  m_AnchoredPosition: {x: 1.1000061, y: 0}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &137846284
@@ -1351,14 +1351,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.78431374}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.5176471}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: b74c31d447d2f5d41a61081bdf5e7126, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -8551,7 +8551,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -214, y: 163}
+  m_AnchoredPosition: {x: -551.00006, y: 125}
   m_SizeDelta: {x: 180, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1047132921
@@ -9083,7 +9083,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -239, y: 584}
+  m_AnchoredPosition: {x: -295.81, y: 564.14}
   m_SizeDelta: {x: 250, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1193774572
@@ -9579,7 +9579,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -422, y: 155}
+  m_AnchoredPosition: {x: -710, y: 125}
   m_SizeDelta: {x: 180, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1364828397
@@ -10544,8 +10544,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -358, y: 364}
-  m_SizeDelta: {x: 350, y: 350}
+  m_AnchoredPosition: {x: -337.38, y: 303.63}
+  m_SizeDelta: {x: 406.14, y: 406.1365}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1640723380
 MonoBehaviour:
@@ -10604,7 +10604,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.5176471}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -21377,7 +21377,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -1881, y: 504}
+  m_AnchoredPosition: {x: -1824, y: 596.7}
   m_SizeDelta: {x: 180, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4861902499102205730
@@ -22303,15 +22303,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2468068750290247944}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.60148436, y: -0.36639062, z: -0.3645098, w: -0.60918564}
-  m_LocalPosition: {x: -0.055, y: 0.183, z: 0.016}
+  m_LocalRotation: {x: -0.5337935, y: 0.46472356, z: 0.46028104, w: 0.5359459}
+  m_LocalPosition: {x: -0.05459524, y: 0.1831052, z: 0.014996856}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4491262457503825187}
   - {fileID: 7344859781808972314}
   m_Father: {fileID: 217545046656636438}
-  m_LocalEulerAnglesHint: {x: -90.642, y: -495.156, z: 557.396}
+  m_LocalEulerAnglesHint: {x: -90.4, y: -435, z: 516.7}
 --- !u!1 &5320420162293436201
 GameObject:
   m_ObjectHideFlags: 0
@@ -33778,7 +33778,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.25
+  m_Radius: 0.22
   m_Height: 1.6
   m_Direction: 1
   m_Center: {x: 0, y: -0.31, z: 0}
@@ -38687,7 +38687,7 @@ MonoBehaviour:
   bottomClamp: -30
   aimColliderMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 129
   maxAimDistance: 100
   useMobileControls: 1
   cameraTouchField: {fileID: 960443881}
@@ -40396,8 +40396,8 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.13
-  m_Center: {x: 0, y: 0.07, z: 0.01}
+  m_Radius: 0.1
+  m_Center: {x: 0, y: 0.04, z: 0.01}
 --- !u!4 &8130343343904441750
 Transform:
   m_ObjectHideFlags: 0
